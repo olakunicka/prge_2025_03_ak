@@ -48,7 +48,5 @@ services:
     ports:
       - 10000:10000
 
-
-
 volumes:
   postgis-prge-local:
