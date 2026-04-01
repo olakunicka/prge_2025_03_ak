@@ -1,4 +1,4 @@
-x-enviroment:
+x-environment:
   - &env-postgres-db POSTGRES_DB=${POSTGRES_DB}
   - &env-postgres-user POSTGRES_USER=${POSTGRES_USER}
   - &env-postgres-password POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -19,5 +19,33 @@ services:
     volumes:
       - postgis-prge-data:/var/lib/postgresql/data
 
+  geoserver:
+    build:
+      context: ..
+      dockerfile: docker/geoserver/Dockerfile
+    image: 'prge_2025_03_ak_geoserver'
+    container_name: prge-2025-03-ak-geoserver-${ENV_NAME}
+    environment:
+      GEOSERVER_DATA_DIR: /opt/geoserver_data
+      SKIP_DEMO_DATA: "true"
+    ports:
+      - ${GEOSERVER_PORT}:8080
+    volumes:
+      - geoserver-data:/opt/geoserver_data
+
+  fastapi:
+    build:
+      context: ..
+      dockerfile: docker/fastapi/Dockerfile
+    image: 'prge_2025_03_ak_fastapi'
+    container_name: prge_2025_03_ak_fastapi-${ENV_NAME}
+    environment:
+      - *env-postgres-db
+      - *env-postgres-user
+      - *env-postgres-password
+    ports:
+      - ${FASTAPI_PORT}:10000
+
 volumes:
   postgis-prge-data:
+  geoserver-data:
