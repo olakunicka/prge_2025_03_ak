@@ -5,3 +5,5 @@ export const About = lazy(() => import('../pages/About'))
 export const ListOfItems = lazy(() => import('../pages/ListOfItems'))
 export const Map = lazy(() => import('../pages/Map'))
 export const Services = lazy(() => import('../pages/Services'))
+export const NewUser = lazy(() => import('../pages/NewUser'))
+

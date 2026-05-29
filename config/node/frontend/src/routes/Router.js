@@ -1,5 +1,6 @@
 import {createBrowserRouter} from 'react-router-dom';
-import {Home, About, Map, Services, ListOfItems} from "./LazyImports";
+import {Home, About, Map, Services, ListOfItems, NewUser} from "./LazyImports";
+
 
 const routes = createBrowserRouter(
     [
@@ -18,6 +19,10 @@ const routes = createBrowserRouter(
         {
             path: '/services',
             element: <Services/>
+        },
+        {
+            path: '/newuser',
+            element: <NewUser/>
         },
         {
             path: '/list',
