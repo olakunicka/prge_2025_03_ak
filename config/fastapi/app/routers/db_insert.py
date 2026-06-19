@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from sqlalchemy import create_engine, text
 from pydantic import BaseModel
-
+from app.settings import db_name, db_user, db_password
 from app.shared_lib.prge_shared.spatial import get_coordinates
 from app.shared_lib.prge_shared.db_conn import engine
 
