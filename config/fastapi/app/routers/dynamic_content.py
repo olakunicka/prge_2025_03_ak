@@ -11,7 +11,10 @@ router_dynamic_users_from_db = APIRouter()
 async def get_user():
     try:
 
-        sql_query = text("""select id, name, location, posts from users""")
+        sql_query = text("""
+                         select id, name, rank, polygon
+                         from users
+                         """)
 
         with engine.connect() as connection:
             result = connection.execute(sql_query)

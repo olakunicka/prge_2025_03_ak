@@ -29,13 +29,14 @@ function NewUser() {
                     },
                     body: JSON.stringify({
                         name: soldierName,
-                        location: soldierRank,
-                        posts: soldierPolygon
+                        rank: soldierRank,
+                        polygon: soldierPolygon
                     })
                 }
             );
 
-            console.log(response);
+            const data = await response.json();
+            console.log(data);
 
         } catch (e) {
             console.log(e);

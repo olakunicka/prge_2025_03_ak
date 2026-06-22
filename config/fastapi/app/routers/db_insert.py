@@ -2,7 +2,6 @@ from fastapi import APIRouter
 from sqlalchemy import text
 from pydantic import BaseModel
 
-from app.shared_lib.prge_shared.spatial import get_coordinates
 from app.shared_lib.prge_shared.db_conn import engine
 
 router_db_insert = APIRouter()
@@ -10,8 +9,12 @@ router_db_insert = APIRouter()
 
 class UserData(BaseModel):
     name: str
-    posts: int
-    location: str
+    rank: str
+    polygon: str
+
+
+class PolygonData(BaseModel):
+    name: str
 
 
 @router_db_insert.post("/insert_user")
@@ -20,39 +23,37 @@ async def insert_user(user: UserData):
 
         params = {
             "name": user.name,
-            "posts": user.posts,
-            "location": user.location,
-            "lat": get_coordinates(user.location)[0],
-            "lng": get_coordinates(user.location)[1]
+            "rank": user.rank,
+            "polygon": user.polygon
         }
 
         sql_query = text("""
-                         insert into users (name, posts, location, geom)
-                         values (:name, :posts, :location, 'SRID=4326;POINT(:lng :lat)');
-                         """)
+            INSERT INTO users (name, rank, polygon)
+            VALUES (:name, :rank, :polygon)
+        """)
 
         with engine.connect() as connection:
-            results = connection.execute(sql_query, params)
+            connection.execute(sql_query, params)
             connection.commit()
-            print(results)
 
-        return {"status": "success", "data_inserted": {user.name, user.posts, user.location}}
-
+        return {
+            "status": "success"
+        }
 
     except Exception as e:
-        return {"status": f"error {str(e)}"}
+        return {
+            "status": f"error {str(e)}"
+        }
 
-class PolygonData(BaseModel):
-    name: str
 
 @router_db_insert.post("/insert_polygon")
 async def insert_polygon(polygon: PolygonData):
     try:
 
         sql_query = text("""
-                            INSERT INTO polygons (name)
-                            VALUES (:name)
-                            """)
+            INSERT INTO polygons (name)
+            VALUES (:name)
+        """)
 
         with engine.connect() as connection:
             connection.execute(
@@ -61,14 +62,111 @@ async def insert_polygon(polygon: PolygonData):
                     "name": polygon.name
                 }
             )
+
             connection.commit()
 
-            return {
-                "status": "success",
-                "data_inserted": polygon.name
-            }
+        return {
+            "status": "success",
+            "data_inserted": polygon.name
+        }
 
     except Exception as e:
-            return {
-                "status": f"error {str(e)}"
-            }
+        return {
+            "status": f"error {str(e)}"
+        }
+
+
+@router_db_insert.delete("/delete_user/{user_id}")
+async def delete_user(user_id: int):
+    try:
+
+        sql_query = text("""
+            DELETE FROM users
+            WHERE id = :user_id
+        """)
+
+        with engine.connect() as connection:
+            connection.execute(
+                sql_query,
+                {
+                    "user_id": user_id
+                }
+            )
+
+            connection.commit()
+
+        return {
+            "status": "success"
+        }
+
+    except Exception as e:
+        return {
+            "status": f"error {str(e)}"
+        }
+
+@router_db_insert.delete("/delete_polygon/{polygon_id}")
+async def delete_polygon(polygon_id: int):
+    try:
+
+        sql_query = text("""
+            DELETE FROM polygons
+            WHERE id = :polygon_id
+        """)
+
+        with engine.connect() as connection:
+            connection.execute(
+                sql_query,
+                {
+                    "polygon_id": polygon_id
+                }
+            )
+
+            connection.commit()
+
+        return {
+            "status": "success"
+        }
+
+    except Exception as e:
+        return {
+            "status": f"error {str(e)}"
+        }
+@router_db_insert.put("/update_user/{user_id}")
+async def update_user(
+        user_id: int,
+        user: UserData
+):
+    try:
+
+        sql_query = text("""
+            UPDATE users
+            SET
+                name = :name,
+                rank = :rank,
+                polygon = :polygon
+            WHERE id = :user_id
+        """)
+
+        with engine.connect() as connection:
+
+            connection.execute(
+                sql_query,
+                {
+                    "user_id": user_id,
+                    "name": user.name,
+                    "rank": user.rank,
+                    "polygon": user.polygon
+                }
+            )
+
+            connection.commit()
+
+        return {
+            "status": "success"
+        }
+
+    except Exception as e:
+
+        return {
+            "status": f"error {str(e)}"
+        }
