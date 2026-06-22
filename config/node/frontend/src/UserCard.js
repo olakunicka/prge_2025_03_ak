@@ -1,33 +1,35 @@
 import React from 'react';
-import {Card, CardHeader, Avatar, CardContent, Typography} from '@mui/material'
+import {
+    Card,
+    CardHeader,
+    Avatar,
+    CardContent,
+    Typography
+} from '@mui/material';
 
-function UserCard(user) {
+function UserCard({ user }) {
     return (
-        <div className='userCard'
-             key={user.id}
-        >
-            <Card >
+        <div className='userCard'>
+            <Card>
                 <CardHeader
                     avatar={
-                    <Avatar sx={{bgcolor:'red'}} aria-label="recipe"
-                    >
-                        {user.name}
-                    </Avatar>
-                }
-                title = {user.name}
-                subheader={user.location}
-                >
+                        <Avatar
+                            sx={{ bgcolor: 'red' }}
+                            aria-label="user"
+                        >
+                            {user.name?.charAt(0)}
+                        </Avatar>
+                    }
+                    title={user.name}
+                    subheader={user.location}
+                />
 
-                </CardHeader>
                 <CardContent>
                     <Typography>
-                        Twój znakomy {user.name} opublikował {user.posts} postów.
+                        Twój znajomy {user.name} opublikował {user.posts} postów.
                     </Typography>
                 </CardContent>
-
-
             </Card>
-
         </div>
     );
 }

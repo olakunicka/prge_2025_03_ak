@@ -34,7 +34,8 @@ jobs:
           POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
           POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
           GEOSERVER_PORT: ${{ secrets.GEOSERVER_PORT}}
-          FASTAPI_PORT: ${{ secrets.FASTAPI_PORT}}
+          #FASTAPI
+          FASTAPI_PORT: ${{secrets.FASTAPI_PORT}}
 
         run:
           docker-compose -f ./docker-compose/docker-compose-prge-remote.yml -p remote-prge_2025_03_ak-${{ github.ref_name }} up --build -d

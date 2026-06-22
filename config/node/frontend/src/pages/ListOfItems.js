@@ -19,7 +19,7 @@ function ListOfItems() {
         <div className="ListofUsers">
             <h1> Lista użytkowników </h1>
             <div>
-                {users.data?.map(user=><UserCard user={user}/>)}
+                {users.data?.map(user => <UserCard key={user.id} user={user}/>)}
             </div>
 
 

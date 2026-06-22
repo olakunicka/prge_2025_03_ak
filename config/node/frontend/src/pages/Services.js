@@ -21,8 +21,9 @@ function Services() {
                 variant="contained"
                 size="large"
                 component={Link}
-                to='/list'
+                to='/newuser'
             >
+                Dodaj użytkownika
             </Button>
             <Button
                 className="list__button"

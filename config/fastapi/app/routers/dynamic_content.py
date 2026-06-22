@@ -1,7 +1,8 @@
 from fastapi import APIRouter
-from sqlalchemy import create_engine, text
+from sqlalchemy import text
 
 from app.shared_lib.prge_shared.db_conn import engine
+
 
 router_dynamic_users_from_db = APIRouter()
 
@@ -10,7 +11,6 @@ router_dynamic_users_from_db = APIRouter()
 async def get_user():
     try:
 
-
         sql_query = text("""select id, name, location, posts from users""")
 
         with engine.connect() as connection:
@@ -18,7 +18,7 @@ async def get_user():
 
             users = [dict(row._mapping) for row in result]
 
-        return {"status": "success", "data":users}
+        return {"status": "success", "data": users}
 
     except Exception as e:
-        return {"status":f"error {str(e)}"}
+        return {"status": f"error {str(e)}"}

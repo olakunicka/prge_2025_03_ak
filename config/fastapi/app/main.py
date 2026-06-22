@@ -1,7 +1,6 @@
 from fastapi import FastAPI
-
-
 from fastapi.middleware.cors import CORSMiddleware
+
 from app.routers.static_endpoint import router
 from app.routers.dynamic_content import router_dynamic_users_from_db
 from app.routers.db_insert import router_db_insert
@@ -10,7 +9,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
