@@ -8,28 +8,43 @@ import {
 } from '@mui/material';
 
 function UserCard({ user }) {
+
     return (
         <div className='userCard'>
+
             <Card>
+
                 <CardHeader
                     avatar={
                         <Avatar
-                            sx={{ bgcolor: 'red' }}
-                            aria-label="user"
+                            sx={{ bgcolor: 'green' }}
+                            aria-label="soldier"
                         >
                             {user.name?.charAt(0)}
                         </Avatar>
                     }
                     title={user.name}
-                    subheader={user.location}
+                    subheader={`Stopień: ${user.location}`}
                 />
 
                 <CardContent>
+
                     <Typography>
-                        Twój znajomy {user.name} opublikował {user.posts} postów.
+                        Żołnierz {user.name}
                     </Typography>
+
+                    <Typography>
+                        Stopień: {user.location}
+                    </Typography>
+
+                    <Typography>
+                        Poligon: {user.posts}
+                    </Typography>
+
                 </CardContent>
+
             </Card>
+
         </div>
     );
 }

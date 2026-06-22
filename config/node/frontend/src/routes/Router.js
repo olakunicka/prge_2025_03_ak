@@ -1,6 +1,7 @@
 import {createBrowserRouter} from 'react-router-dom';
 import {Home, About, Map, Services, ListOfItems, NewUser} from "./LazyImports";
-
+import NewPolygon from "../pages/NewPolygon";
+import PolygonList from "../pages/PolygonList";
 
 const routes = createBrowserRouter(
     [
@@ -27,6 +28,14 @@ const routes = createBrowserRouter(
         {
             path: '/list',
             element: <ListOfItems/>
+        },
+        {
+            path: '/newpolygon',
+            element: <NewPolygon/>
+        },
+        {
+            path: '/polygonlist',
+            element: <PolygonList/>
         }
     ]
 )

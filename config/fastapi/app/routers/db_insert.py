@@ -41,3 +41,34 @@ async def insert_user(user: UserData):
 
     except Exception as e:
         return {"status": f"error {str(e)}"}
+
+class PolygonData(BaseModel):
+    name: str
+
+@router_db_insert.post("/insert_polygon")
+async def insert_polygon(polygon: PolygonData):
+    try:
+
+        sql_query = text("""
+                            INSERT INTO polygons (name)
+                            VALUES (:name)
+                            """)
+
+        with engine.connect() as connection:
+            connection.execute(
+                sql_query,
+                {
+                    "name": polygon.name
+                }
+            )
+            connection.commit()
+
+            return {
+                "status": "success",
+                "data_inserted": polygon.name
+            }
+
+    except Exception as e:
+            return {
+                "status": f"error {str(e)}"
+            }

@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routers.static_endpoint import router
 from app.routers.dynamic_content import router_dynamic_users_from_db
 from app.routers.db_insert import router_db_insert
+from app.routers.dynamic_polygons import router_dynamic_polygons
 
 app = FastAPI()
 
@@ -18,3 +19,4 @@ app.add_middleware(
 app.include_router(router, prefix="/app")
 app.include_router(router_dynamic_users_from_db, prefix="/app")
 app.include_router(router_db_insert, prefix="/app")
+app.include_router(router_dynamic_polygons, prefix="/app")

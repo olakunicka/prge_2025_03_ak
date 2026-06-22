@@ -1,12 +1,15 @@
 import React from 'react';
-import {Button} from "@mui/material";
-import {Link} from 'react-router-dom';
-
+import { Button } from "@mui/material";
+import { Link } from 'react-router-dom';
 
 function Services() {
     return (
         <div className='services'>
-            <div className='services__title'>Services</div>
+
+            <div className='services__title'>
+                System zarządzania poligonami
+            </div>
+
             <Button
                 className="map__button"
                 variant="contained"
@@ -14,8 +17,9 @@ function Services() {
                 component={Link}
                 to='/map'
             >
-                Do map
+                MAPA
             </Button>
+
             <Button
                 className="newuser_button"
                 variant="contained"
@@ -23,8 +27,9 @@ function Services() {
                 component={Link}
                 to='/newuser'
             >
-                Dodaj użytkownika
+                DODAJ ŻOŁNIERZA
             </Button>
+
             <Button
                 className="list__button"
                 variant="contained"
@@ -32,9 +37,28 @@ function Services() {
                 component={Link}
                 to='/list'
             >
-                Do list
+                LISTA ŻOŁNIERZY
             </Button>
 
+            <Button
+                className="polygon_button"
+                variant="contained"
+                size="large"
+                component={Link}
+                to='/newpolygon'
+            >
+                DODAJ POLIGON
+            </Button>
+
+            <Button
+                className="polygonlist_button"
+                variant="contained"
+                size="large"
+                component={Link}
+                to='/polygonlist'
+            >
+                LISTA POLIGONÓW
+            </Button>
 
         </div>
     );
