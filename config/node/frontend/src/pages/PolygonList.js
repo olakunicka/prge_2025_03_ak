@@ -1,17 +1,12 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 
 function PolygonList() {
 
     const [polygons, setPolygons] = useState([]);
-
-    useEffect(() => {
-
-        loadPolygons();
-
-    }, []);
+    const [editId, setEditId] = useState(null);
+    const [editName, setEditName] = useState('');
 
     const loadPolygons = () => {
-
         fetch('http://localhost:10000/app/polygons_dynamic')
             .then(res => res.json())
             .then(res => {
@@ -20,23 +15,51 @@ function PolygonList() {
             });
     };
 
-    const deletePolygon = async (polygonId) => {
+    useEffect(() => {
+        loadPolygons();
+    }, []);
 
-        try {
+    const deletePolygon = async (id) => {
 
-            await fetch(
-                `http://localhost:10000/app/delete_polygon/${polygonId}`,
-                {
-                    method: 'DELETE'
-                }
-            );
-
-            loadPolygons();
-
-        } catch (error) {
-
-            console.log(error);
+        if (!window.confirm("Na pewno usunąć poligon?")) {
+            return;
         }
+
+        const response = await fetch(
+            `http://localhost:10000/app/delete_polygon/${id}`,
+            {
+                method: 'DELETE'
+            }
+        );
+
+        const result = await response.json();
+        console.log(result);
+
+        loadPolygons();
+    };
+
+    const updatePolygon = async (id) => {
+
+        const response = await fetch(
+            `http://localhost:10000/app/update_polygon/${id}`,
+            {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: editName
+                })
+            }
+        );
+
+        const result = await response.json();
+        console.log(result);
+
+        setEditId(null);
+        setEditName('');
+
+        loadPolygons();
     };
 
     return (
@@ -54,15 +77,43 @@ function PolygonList() {
                         margin: '10px'
                     }}
                 >
-                    <h3>{polygon.name}</h3>
 
-                    <button
-                        onClick={() =>
-                            deletePolygon(polygon.id)
-                        }
-                    >
-                        USUŃ
-                    </button>
+                    {editId === polygon.id ? (
+                        <>
+                            <input
+                                value={editName}
+                                onChange={(e) => setEditName(e.target.value)}
+                            />
+
+                            <br /><br />
+
+                            <button
+                                onClick={() => updatePolygon(polygon.id)}
+                            >
+                                ZAPISZ
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <h3>{polygon.name}</h3>
+
+                            <button
+                                onClick={() => deletePolygon(polygon.id)}
+                            >
+                                USUŃ
+                            </button>
+
+                            <button
+                                onClick={() => {
+                                    setEditId(polygon.id);
+                                    setEditName(polygon.name);
+                                }}
+                                style={{ marginLeft: '10px' }}
+                            >
+                                EDYTUJ
+                            </button>
+                        </>
+                    )}
 
                 </div>
 

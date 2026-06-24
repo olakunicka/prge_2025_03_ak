@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from sqlalchemy import text
 from pydantic import BaseModel
-
+from app.shared_lib.prge_shared.spatial import get_coordinates
 from app.shared_lib.prge_shared.db_conn import engine
 
 router_db_insert = APIRouter()
@@ -50,16 +50,24 @@ async def insert_user(user: UserData):
 async def insert_polygon(polygon: PolygonData):
     try:
 
+        lat, lon = get_coordinates(polygon.name)
+
         sql_query = text("""
-            INSERT INTO polygons (name)
-            VALUES (:name)
-        """)
+                         INSERT INTO polygons (name, geom)
+                         VALUES (:name,
+                                 ST_SetSRID(
+                                         ST_MakePoint(:lon, :lat),
+                                         4326
+                                 ))
+                         """)
 
         with engine.connect() as connection:
             connection.execute(
                 sql_query,
                 {
-                    "name": polygon.name
+                    "name": polygon.name,
+                    "lat": lat,
+                    "lon": lon
                 }
             )
 
@@ -156,6 +164,41 @@ async def update_user(
                     "name": user.name,
                     "rank": user.rank,
                     "polygon": user.polygon
+                }
+            )
+
+            connection.commit()
+
+        return {
+            "status": "success"
+        }
+
+    except Exception as e:
+
+        return {
+            "status": f"error {str(e)}"
+        }
+
+@router_db_insert.put("/update_polygon/{polygon_id}")
+async def update_polygon(
+        polygon_id: int,
+        polygon: PolygonData
+):
+    try:
+
+        sql_query = text("""
+            UPDATE polygons
+            SET name = :name
+            WHERE id = :polygon_id
+        """)
+
+        with engine.connect() as connection:
+
+            connection.execute(
+                sql_query,
+                {
+                    "polygon_id": polygon_id,
+                    "name": polygon.name
                 }
             )
 

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
     Card,
     CardHeader,
@@ -37,33 +37,40 @@ function UserCard({ user }) {
 
     const updateUser = async () => {
 
-    try {
+        console.log("Kliknięto ZAPISZ");
 
-        const response = await fetch(
-            `http://localhost:10000/app/update_user/${user.id}`,
-            {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    name: name,
-                    rank: rank,
-                    polygon: polygon
-                })
+        try {
+
+            const response = await fetch(
+                `http://localhost:10000/app/update_user/${user.id}`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name,
+                        rank,
+                        polygon
+                    })
+                }
+            );
+
+            console.log("Status:", response.status);
+
+            const data = await response.json();
+
+            console.log("Odpowiedź:", data);
+
+            if (response.ok) {
+                window.location.reload();
             }
-        );
 
-        const data = await response.json();
+        } catch (error) {
 
-        console.log(data);
-        alert(JSON.stringify(data));
-
-    } catch (error) {
-
-        console.log(error);
-    }
-};
+            console.log("Błąd:", error);
+        }
+    };
 
     return (
         <div className='userCard'>
@@ -73,7 +80,7 @@ function UserCard({ user }) {
                 <CardHeader
                     avatar={
                         <Avatar
-                            sx={{bgcolor: 'green'}}
+                            sx={{ bgcolor: 'green' }}
                             aria-label="soldier"
                         >
                             {user.name?.charAt(0)}
@@ -100,7 +107,7 @@ function UserCard({ user }) {
                     <Button
                         variant="contained"
                         color="error"
-                        sx={{mt: 2}}
+                        sx={{ mt: 2 }}
                         onClick={deleteUser}
                     >
                         USUŃ
@@ -108,55 +115,53 @@ function UserCard({ user }) {
 
                     <Button
                         variant="contained"
-                        sx={{mt: 2, ml: 2}}
+                        sx={{ mt: 2, ml: 2 }}
                         onClick={() => setEditMode(!editMode)}
                     >
                         EDYTUJ
                     </Button>
 
-                    {
-                        editMode && (
+                    {editMode && (
 
-                            <div style={{marginTop: '15px'}}>
+                        <div style={{ marginTop: '15px' }}>
 
-                                <input
-                                    value={name}
-                                    onChange={(e) =>
-                                        setName(e.target.value)
-                                    }
-                                />
+                            <input
+                                value={name}
+                                onChange={(e) =>
+                                    setName(e.target.value)
+                                }
+                            />
 
-                                <br/><br/>
+                            <br /><br />
 
-                                <input
-                                    value={rank}
-                                    onChange={(e) =>
-                                        setRank(e.target.value)
-                                    }
-                                />
+                            <input
+                                value={rank}
+                                onChange={(e) =>
+                                    setRank(e.target.value)
+                                }
+                            />
 
-                                <br/><br/>
+                            <br /><br />
 
-                                <input
-                                    value={polygon}
-                                    onChange={(e) =>
-                                        setPolygon(e.target.value)
-                                    }
-                                />
+                            <input
+                                value={polygon}
+                                onChange={(e) =>
+                                    setPolygon(e.target.value)
+                                }
+                            />
 
-                                <br/><br/>
+                            <br /><br />
 
-                                <Button
-                                    variant="contained"
-                                    color="success"
-                                    onClick={updateUser}
-                                >
-                                    ZAPISZ
-                                </Button>
+                            <Button
+                                variant="contained"
+                                color="success"
+                                onClick={updateUser}
+                            >
+                                ZAPISZ
+                            </Button>
 
-                            </div>
-                        )
-                    }
+                        </div>
+                    )}
 
                 </CardContent>
 

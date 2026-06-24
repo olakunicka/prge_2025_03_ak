@@ -11,8 +11,12 @@ async def get_polygons():
     try:
 
         sql_query = text("""
-            select id, name
-            from polygons
+            SELECT
+                id,
+                name,
+                ST_X(geom) AS lon,
+                ST_Y(geom) AS lat
+            FROM polygons
         """)
 
         with engine.connect() as connection:

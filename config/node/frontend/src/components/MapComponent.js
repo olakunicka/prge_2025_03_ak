@@ -13,14 +13,14 @@ import {Feature} from 'ol';
 
 import Point from 'ol/geom/Point';
 
-import {TileWMS, Vector as VectorSource, OSM} from 'ol/source';
-
-import GeoJSON from 'ol/format/GeoJSON';
+import {Vector as VectorSource, OSM} from 'ol/source';
 
 import Style from 'ol/style/Style';
 import CircleStyle from 'ol/style/Circle';
 import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
+
+import GeoJSON from 'ol/format/GeoJSON';
 
 import './MapComponent.css';
 
@@ -37,31 +37,21 @@ function MapComponent() {
 
         const newValue = !toggleMarkerButton;
 
-        setToggleMarkerButton(!toggleMarkerButton);
+        setToggleMarkerButton(newValue);
         toggleMarkerRef.current = newValue;
     }
 
     useEffect(() => {
 
-        // warstwa markerów dodawanych kliknięciem
         const markerSource = new VectorSource();
 
         const markerLayer = new VectorLayer({
             source: markerSource,
         });
 
-        // warstwa użytkowników z GeoServera
         const usersSource = new VectorSource({
             url: '/geoserver/prge_2025_03_ak/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=prge_2025_03_ak:users&outputFormat=application/json',
             format: new GeoJSON(),
-        });
-
-        usersSource.on('featuresloadend', () => {
-            console.log('ZAŁADOWANO:', usersSource.getFeatures().length);
-        });
-
-        usersSource.on('featuresloaderror', () => {
-            console.log('BŁĄD ŁADOWANIA WFS');
         });
 
         const usersLayer = new VectorLayer({
@@ -80,26 +70,55 @@ function MapComponent() {
             })
         });
 
+        const polygonSource = new VectorSource();
+
+        const polygonLayer = new VectorLayer({
+            source: polygonSource,
+            style: new Style({
+                image: new CircleStyle({
+                    radius: 8,
+                    fill: new Fill({
+                        color: 'blue'
+                    }),
+                    stroke: new Stroke({
+                        color: 'white',
+                        width: 2
+                    })
+                })
+            })
+        });
+
+        fetch('http://localhost:10000/app/polygons_dynamic')
+            .then(res => res.json())
+            .then(res => {
+
+                console.log("POLYGONS:", res);
+
+                res.data.forEach(polygon => {
+
+                    const feature = new Feature({
+                        geometry: new Point([
+                            polygon.lon,
+                            polygon.lat
+                        ]),
+                        name: polygon.name
+                    });
+
+                    polygonSource.addFeature(feature);
+                });
+
+            });
+
         const map = new Map({
             target: mapRef.current,
+
             layers: [
                 new TileLayer({
                     source: new OSM(),
                 }),
 
-                new TileLayer({
-                    source: new TileWMS({
-                        url: 'http://localhost:9000/geoserver/prge_2025_03_ak/wms?',
-                        params: {
-                            'LAYERS': 'prge_2025_03_ak:AEC015_lasy',
-                            'TILED': true
-                        },
-                        serverType: 'geoserver',
-                        transition: 0
-                    })
-                }),
-
                 usersLayer,
+                polygonLayer,
                 markerLayer
             ],
 
@@ -109,19 +128,23 @@ function MapComponent() {
             })
         });
 
-        // kliknięcie użytkownika
         map.on('singleclick', function (event) {
 
             map.forEachFeatureAtPixel(event.pixel, function (feature) {
 
                 const props = feature.getProperties();
 
-                if (props.name) {
+                if (props.location) {
 
                     alert(
-                        `Imię: ${props.name}\n` +
-                        `Miejscowość: ${props.location}\n` +
-                        `Posty: ${props.posts}`
+                        `Żołnierz: ${props.name}\n` +
+                        `Poligon: ${props.location}`
+                    );
+                }
+                else if (props.name) {
+
+                    alert(
+                        `Poligon: ${props.name}`
                     );
                 }
 
@@ -129,7 +152,6 @@ function MapComponent() {
 
         });
 
-        // dodawanie własnego markera
         map.on('click', function (event) {
 
             if (toggleMarkerRef.current) {
@@ -164,7 +186,7 @@ function MapComponent() {
                     right: '10px',
                     zIndex: 1000
                 }}
-                onClick={() => handleMarkerButtonClick()}
+                onClick={handleMarkerButtonClick}
             >
                 Marker
             </Button>
