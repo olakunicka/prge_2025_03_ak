@@ -1,22 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+import {
+    Card,
+    CardContent,
+    Typography,
+    Button,
+    TextField
+} from "@mui/material";
+
+import "./PolygonList.css";
 
 function PolygonList() {
 
     const [polygons, setPolygons] = useState([]);
     const [editId, setEditId] = useState(null);
-    const [editName, setEditName] = useState('');
+    const [editName, setEditName] = useState("");
 
     const loadPolygons = () => {
-        fetch('http://localhost:10000/app/polygons_dynamic')
+
+        fetch("http://localhost:10000/app/polygons_dynamic")
             .then(res => res.json())
             .then(res => {
                 console.log(res);
                 setPolygons(res);
             });
+
     };
 
     useEffect(() => {
+
         loadPolygons();
+
     }, []);
 
     const deletePolygon = async (id) => {
@@ -25,102 +38,163 @@ function PolygonList() {
             return;
         }
 
-        const response = await fetch(
+        await fetch(
             `http://localhost:10000/app/delete_polygon/${id}`,
             {
-                method: 'DELETE'
+                method: "DELETE"
             }
         );
 
-        const result = await response.json();
-        console.log(result);
-
         loadPolygons();
+
     };
 
     const updatePolygon = async (id) => {
 
-        const response = await fetch(
+        await fetch(
             `http://localhost:10000/app/update_polygon/${id}`,
             {
-                method: 'PUT',
+
+                method: "PUT",
+
                 headers: {
-                    'Content-Type': 'application/json'
+                    "Content-Type": "application/json"
                 },
+
                 body: JSON.stringify({
                     name: editName
                 })
+
             }
         );
 
-        const result = await response.json();
-        console.log(result);
-
         setEditId(null);
-        setEditName('');
+        setEditName("");
 
         loadPolygons();
+
     };
 
     return (
-        <div className="PolygonList">
 
-            <h1>Lista poligonów</h1>
+        <div className="polygonList">
 
-            {polygons.data?.map(polygon => (
+            <div className="polygonList__header">
 
-                <div
-                    key={polygon.id}
-                    style={{
-                        border: '1px solid black',
-                        padding: '10px',
-                        margin: '10px'
-                    }}
-                >
+                <h1>LISTA POLIGONÓW</h1>
 
-                    {editId === polygon.id ? (
-                        <>
-                            <input
-                                value={editName}
-                                onChange={(e) => setEditName(e.target.value)}
-                            />
+                <p>Zarządzaj dodanymi poligonami.</p>
 
-                            <br /><br />
+            </div>
 
-                            <button
-                                onClick={() => updatePolygon(polygon.id)}
-                            >
-                                ZAPISZ
-                            </button>
-                        </>
-                    ) : (
-                        <>
-                            <h3>{polygon.name}</h3>
+            <div className="polygonList__grid">
 
-                            <button
-                                onClick={() => deletePolygon(polygon.id)}
-                            >
-                                USUŃ
-                            </button>
+                {polygons.data?.map((polygon) => (
 
-                            <button
-                                onClick={() => {
-                                    setEditId(polygon.id);
-                                    setEditName(polygon.name);
-                                }}
-                                style={{ marginLeft: '10px' }}
-                            >
-                                EDYTUJ
-                            </button>
-                        </>
-                    )}
+                    <Card
+                        key={polygon.id}
+                        className="polygonCard"
+                    >
 
-                </div>
+                        <CardContent>
 
-            ))}
+                            {editId === polygon.id ? (
+
+                                <>
+
+                                    <TextField
+
+                                        fullWidth
+
+                                        value={editName}
+
+                                        onChange={(e) =>
+                                            setEditName(e.target.value)
+                                        }
+
+                                    />
+
+                                    <div className="polygonCard__buttons">
+
+                                        <Button
+                                            variant="contained"
+                                            color="success"
+                                            onClick={() =>
+                                                updatePolygon(polygon.id)
+                                            }
+                                        >
+                                            ZAPISZ
+                                        </Button>
+
+                                    </div>
+
+                                </>
+
+                            ) : (
+
+                                <>
+
+                                    <Typography
+                                        className="polygonCard__title"
+                                    >
+                                        {polygon.name}
+                                    </Typography>
+
+                                    <Typography
+                                        className="polygonCard__label"
+                                    >
+                                        POLIGON
+                                    </Typography>
+
+                                    <Typography
+                                        className="polygonCard__value"
+                                    >
+                                        {polygon.name}
+                                    </Typography>
+
+                                    <div className="polygonCard__buttons">
+
+                                        <Button
+                                            variant="contained"
+                                            className="editButton"
+                                            onClick={() => {
+
+                                                setEditId(polygon.id);
+                                                setEditName(polygon.name);
+
+                                            }}
+                                        >
+                                            EDYTUJ
+                                        </Button>
+
+                                        <Button
+                                            variant="contained"
+                                            color="error"
+                                            onClick={() =>
+                                                deletePolygon(polygon.id)
+                                            }
+                                        >
+                                            USUŃ
+                                        </Button>
+
+                                    </div>
+
+                                </>
+
+                            )}
+
+                        </CardContent>
+
+                    </Card>
+
+                ))}
+
+            </div>
 
         </div>
+
     );
+
 }
 
 export default PolygonList;

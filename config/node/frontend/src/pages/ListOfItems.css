@@ -1,0 +1,62 @@
+.list-page {
+
+    min-height: 100vh;
+
+    background:
+        radial-gradient(circle at top left,
+            rgba(75,111,68,.07),
+            transparent 30%),
+
+        radial-gradient(circle at bottom right,
+            rgba(75,111,68,.06),
+            transparent 25%),
+
+        linear-gradient(135deg,#eef3f8,#ffffff);
+
+    font-family: "Lato", sans-serif;
+
+    padding: 70px 40px;
+
+}
+
+.list-container{
+
+    max-width:1300px;
+
+    margin:auto;
+
+}
+
+.list-title{
+
+    text-align:center;
+
+    font-size:56px;
+
+    font-weight:700;
+
+    margin-bottom:15px;
+
+}
+
+.list-subtitle{
+
+    text-align:center;
+
+    color:#666;
+
+    font-size:24px;
+
+    margin-bottom:60px;
+
+}
+
+.list-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(350px,1fr));
+
+    gap:30px;
+
+}

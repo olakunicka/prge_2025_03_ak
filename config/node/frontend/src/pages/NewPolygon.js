@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 import {
     Container,
     Paper,
     Box,
     TextField,
-    Button
-} from '@mui/material';
+    Button,
+    Typography
+} from "@mui/material";
+
+import "./NewPolygon.css";
 
 function NewPolygon() {
 
-    const [polygonName, setPolygonName] = useState('');
+    const [polygonName, setPolygonName] = useState("");
 
     const handleSubmit = async (e) => {
 
@@ -19,11 +22,11 @@ function NewPolygon() {
         try {
 
             const response = await fetch(
-                'http://localhost:10000/app/insert_polygon',
+                "http://localhost:10000/app/insert_polygon",
                 {
-                    method: 'POST',
+                    method: "POST",
                     headers: {
-                        'Content-Type': 'application/json'
+                        "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
                         name: polygonName
@@ -35,42 +38,64 @@ function NewPolygon() {
 
             console.log(data);
 
-            alert('Poligon został dodany');
-
-            setPolygonName('');
+            setPolygonName("");
 
         } catch (error) {
 
             console.log(error);
 
-            alert('Błąd podczas dodawania poligonu');
         }
+
     };
 
     return (
-        <div className='newpolygon__container'>
 
-            <Container>
-                <Paper elevation={3} sx={{ p: 4 }}>
+        <div className="newpolygon">
+
+            <Container maxWidth="md">
+
+                <div className="newpolygon__header">
+
+                    <Typography
+                        variant="h2"
+                        className="newpolygon__title"
+                    >
+                        DODAWANIE POLIGONU
+                    </Typography>
+
+                    <Typography
+                        className="newpolygon__subtitle"
+                    >
+                        Uzupełnij dane nowego poligonu.
+                    </Typography>
+
+                </div>
+
+                <Paper
+                    elevation={0}
+                    className="newpolygon__paper"
+                >
 
                     <Box
-                        component='form'
+                        component="form"
                         onSubmit={handleSubmit}
                     >
 
                         <TextField
                             fullWidth
-                            label='Nazwa poligonu'
+                            label="Nazwa poligonu"
                             value={polygonName}
                             onChange={(e) =>
                                 setPolygonName(e.target.value)
                             }
-                            sx={{ mb: 2 }}
+                            margin="normal"
                         />
 
                         <Button
-                            type='submit'
-                            variant='contained'
+                            type="submit"
+                            variant="contained"
+                            className="newpolygon__button"
+                            fullWidth
                         >
                             DODAJ POLIGON
                         </Button>
@@ -78,10 +103,13 @@ function NewPolygon() {
                     </Box>
 
                 </Paper>
+
             </Container>
 
         </div>
+
     );
+
 }
 
 export default NewPolygon;

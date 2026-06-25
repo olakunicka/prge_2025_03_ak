@@ -19,6 +19,9 @@ import Style from 'ol/style/Style';
 import CircleStyle from 'ol/style/Circle';
 import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
+import Icon from 'ol/style/Icon';
+import Overlay from 'ol/Overlay';
+
 
 import GeoJSON from 'ol/format/GeoJSON';
 
@@ -30,6 +33,7 @@ function MapComponent() {
 
     const toggleMarkerRef = useRef(false);
     const mapRef = useRef(null);
+    const popupRef = useRef(null);
 
     useGeographic();
 
@@ -75,15 +79,10 @@ function MapComponent() {
         const polygonLayer = new VectorLayer({
             source: polygonSource,
             style: new Style({
-                image: new CircleStyle({
-                    radius: 8,
-                    fill: new Fill({
-                        color: 'blue'
-                    }),
-                    stroke: new Stroke({
-                        color: 'white',
-                        width: 2
-                    })
+                image: new Icon({
+                    src: 'https://fonts.gstatic.com/s/i/materialicons/place/v15/24px.svg',
+                    scale: 1.5,
+                    anchor: [0.5, 1]
                 })
             })
         });
@@ -109,8 +108,15 @@ function MapComponent() {
 
             });
 
+        const popup = new Overlay({
+            element: popupRef.current,
+            positioning: 'bottom-center',
+            stopEvent: false,
+            offset: [0, -35]
+        });
         const map = new Map({
             target: mapRef.current,
+            overlays: [popup],
 
             layers: [
                 new TileLayer({
@@ -140,12 +146,43 @@ function MapComponent() {
                         `Żołnierz: ${props.name}\n` +
                         `Poligon: ${props.location}`
                     );
-                }
-                else if (props.name) {
 
-                    alert(
-                        `Poligon: ${props.name}`
-                    );
+                } else if (props.name) {
+
+                    fetch(`http://localhost:10000/app/soldiers_by_polygon/${props.name}`)
+                        .then(res => res.json())
+                        .then(data => {
+
+                            let html = `<h3>${props.name}</h3>`;
+
+                            if (data.data.length === 0) {
+
+                                html += `<p>Brak żołnierzy</p>`;
+
+                            } else {
+
+                                html += "<ul>";
+
+                                data.data.forEach(soldier => {
+
+                                    html += `<li>${soldier.name} (${soldier.rank})</li>`;
+
+                                });
+
+                                html += "</ul>";
+
+                            }
+
+                            document.getElementById("popup-content").innerHTML = html;
+
+                            popup.setPosition(
+                                feature.getGeometry().getCoordinates()
+                            );
+
+                            popupRef.current.style.display = "block";
+
+                        });
+
                 }
 
             });
@@ -176,6 +213,13 @@ function MapComponent() {
     return (
         <>
             <div className='mapComponent' ref={mapRef}></div>
+            <div
+                ref={popupRef}
+                className="ol-popup"
+                style={{display: "none"}}
+            >
+                <div id="popup-content"></div>
+            </div>
 
             <Button
                 variant={toggleMarkerButton ? "contained" : "outlined"}

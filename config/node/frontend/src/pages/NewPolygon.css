@@ -1,0 +1,68 @@
+.newpolygon{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    padding:80px 20px;
+
+    background:linear-gradient(
+        135deg,
+        #eef4f8 0%,
+        #f8f9fb 50%,
+        #eef4f8 100%
+    );
+}
+
+.newpolygon .MuiContainer-root{
+    max-width:1000px !important;
+}
+
+.newpolygon__header{
+    text-align:center;
+    margin-bottom:40px;
+}
+
+.newpolygon__title{
+    font-weight:800 !important;
+    color:#111;
+    margin-bottom:10px !important;
+}
+
+.newpolygon__subtitle{
+    font-size:22px !important;
+    color:#666;
+}
+
+.newpolygon__paper{
+    padding:45px !important;
+    border-radius:28px !important;
+    box-shadow:0 15px 40px rgba(0,0,0,.12) !important;
+    background:white !important;
+}
+
+.newpolygon .MuiTextField-root{
+    margin-bottom:25px;
+}
+
+.newpolygon .MuiOutlinedInput-root{
+    border-radius:16px;
+}
+
+.newpolygon__button{
+    height:62px;
+
+    border-radius:14px !important;
+
+    background:#507b46 !important;
+
+    font-size:20px !important;
+    font-weight:700 !important;
+
+    transition:.25s !important;
+}
+
+.newpolygon__button:hover{
+    background:#41663a !important;
+    transform:translateY(-2px);
+}

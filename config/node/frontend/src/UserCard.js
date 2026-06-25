@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
     Card,
-    CardHeader,
-    Avatar,
     CardContent,
     Typography,
-    Button
-} from '@mui/material';
+    Button,
+    TextField,
+    Box
+} from "@mui/material";
+
+import "./UserCard.css";
 
 function UserCard({ user }) {
 
@@ -23,7 +25,7 @@ function UserCard({ user }) {
             await fetch(
                 `http://localhost:10000/app/delete_user/${user.id}`,
                 {
-                    method: 'DELETE'
+                    method: "DELETE"
                 }
             );
 
@@ -32,21 +34,21 @@ function UserCard({ user }) {
         } catch (error) {
 
             console.log(error);
+
         }
+
     };
 
     const updateUser = async () => {
-
-        console.log("Kliknięto ZAPISZ");
 
         try {
 
             const response = await fetch(
                 `http://localhost:10000/app/update_user/${user.id}`,
                 {
-                    method: 'PUT',
+                    method: "PUT",
                     headers: {
-                        'Content-Type': 'application/json'
+                        "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
                         name,
@@ -56,111 +58,121 @@ function UserCard({ user }) {
                 }
             );
 
-            console.log("Status:", response.status);
-
-            const data = await response.json();
-
-            console.log("Odpowiedź:", data);
-
             if (response.ok) {
                 window.location.reload();
             }
 
         } catch (error) {
 
-            console.log("Błąd:", error);
+            console.log(error);
+
         }
+
     };
 
     return (
-        <div className='userCard'>
 
-            <Card>
+        <div className="userCard">
 
-                <CardHeader
-                    avatar={
-                        <Avatar
-                            sx={{ bgcolor: 'green' }}
-                            aria-label="soldier"
-                        >
-                            {user.name?.charAt(0)}
-                        </Avatar>
-                    }
-                    title={user.name}
-                    subheader={`Stopień: ${user.rank}`}
-                />
+            <Card className="userCard__card">
 
                 <CardContent>
 
-                    <Typography>
-                        Żołnierz: {user.name}
+                    <Typography className="userCard__name">
+
+                        {user.name}
+
                     </Typography>
 
-                    <Typography>
-                        Stopień: {user.rank}
+                    <Typography className="userCard__rank">
+
+                        {user.rank}
+
                     </Typography>
 
-                    <Typography>
-                        Poligon: {user.polygon}
-                    </Typography>
+                    <div className="userCard__info">
 
-                    <Button
-                        variant="contained"
-                        color="error"
-                        sx={{ mt: 2 }}
-                        onClick={deleteUser}
-                    >
-                        USUŃ
-                    </Button>
+                        <div className="userCard__row">
 
-                    <Button
-                        variant="contained"
-                        sx={{ mt: 2, ml: 2 }}
-                        onClick={() => setEditMode(!editMode)}
-                    >
-                        EDYTUJ
-                    </Button>
+                            <span className="userCard__label">
+                                POLIGON
+                            </span>
+
+                            <span className="userCard__value">
+                                {user.polygon}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <Box className="userCard__buttons">
+
+                        <Button
+                            className="editButton"
+                            variant="contained"
+                            onClick={() => setEditMode(!editMode)}
+                        >
+                            EDYTUJ
+                        </Button>
+
+                        <Button
+                            className="deleteButton"
+                            variant="contained"
+                            onClick={deleteUser}
+                        >
+                            USUŃ
+                        </Button>
+
+                    </Box>
 
                     {editMode && (
 
-                        <div style={{ marginTop: '15px' }}>
+                        <div className="userCard__edit">
 
-                            <input
+                            <TextField
+                                fullWidth
+                                size="small"
+                                margin="dense"
+                                label="Imię i nazwisko"
                                 value={name}
                                 onChange={(e) =>
                                     setName(e.target.value)
                                 }
                             />
 
-                            <br /><br />
-
-                            <input
+                            <TextField
+                                fullWidth
+                                size="small"
+                                margin="dense"
+                                label="Stopień"
                                 value={rank}
                                 onChange={(e) =>
                                     setRank(e.target.value)
                                 }
                             />
 
-                            <br /><br />
-
-                            <input
+                            <TextField
+                                fullWidth
+                                size="small"
+                                margin="dense"
+                                label="Poligon"
                                 value={polygon}
                                 onChange={(e) =>
                                     setPolygon(e.target.value)
                                 }
                             />
 
-                            <br /><br />
-
                             <Button
+                                className="saveButton"
                                 variant="contained"
-                                color="success"
                                 onClick={updateUser}
                             >
-                                ZAPISZ
+                                ZAPISZ ZMIANY
                             </Button>
 
                         </div>
+
                     )}
 
                 </CardContent>
@@ -168,7 +180,9 @@ function UserCard({ user }) {
             </Card>
 
         </div>
+
     );
+
 }
 
 export default UserCard;

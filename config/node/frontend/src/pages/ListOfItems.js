@@ -1,5 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from "react";
 import UserCard from "../UserCard";
+
+import "./ListOfItems.css";
 
 function ListOfItems() {
 
@@ -7,31 +9,47 @@ function ListOfItems() {
 
     useEffect(() => {
 
-        fetch('http://localhost:10000/app/users_dynamic')
+        fetch("http://localhost:10000/app/users_dynamic")
             .then(res => res.json())
             .then(res => {
-                console.log(res);
                 setSoldiers(res);
             });
 
     }, []);
 
     return (
-        <div className="ListofUsers">
 
-            <h1>Lista żołnierzy</h1>
+        <div className="list-page">
 
-            <div>
-                {soldiers.data?.map(user =>
-                    <UserCard
-                        key={user.id}
-                        user={user}
-                    />
-                )}
+            <div className="list-container">
+
+                <h1 className="list-title">
+                    LISTA ŻOŁNIERZY
+                </h1>
+
+                <p className="list-subtitle">
+                    Zarządzaj dodanymi żołnierzami.
+                </p>
+
+                <div className="list-grid">
+
+                    {soldiers.data?.map(user => (
+
+                        <UserCard
+                            key={user.id}
+                            user={user}
+                        />
+
+                    ))}
+
+                </div>
+
             </div>
 
         </div>
+
     );
+
 }
 
 export default ListOfItems;

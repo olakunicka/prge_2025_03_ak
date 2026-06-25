@@ -1,0 +1,102 @@
+.userCard {
+    width: 100%;
+}
+
+.userCard__card {
+    border-radius: 22px !important;
+    border-top: 6px solid #4b6f44;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12) !important;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.userCard__card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18) !important;
+}
+
+.userCard__name {
+    font-size: 28px !important;
+    font-weight: 700 !important;
+    color: #1f1f1f;
+    margin-bottom: 8px !important;
+}
+
+.userCard__rank {
+    font-size: 18px !important;
+    color: #4b6f44;
+    font-weight: 600 !important;
+    margin-bottom: 28px !important;
+}
+
+.userCard__info {
+    margin-bottom: 28px;
+}
+
+.userCard__row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.userCard__label {
+    font-size: 12px;
+    color: #888;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.userCard__value {
+    font-size: 19px;
+    color: #222;
+    font-weight: 500;
+}
+
+.userCard__buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.editButton {
+    flex: 1;
+    background: #4b6f44 !important;
+    border-radius: 10px !important;
+    font-weight: 700 !important;
+    padding: 10px 0 !important;
+}
+
+.editButton:hover {
+    background: #3d5d37 !important;
+}
+
+.deleteButton {
+    flex: 1;
+    background: #a13333 !important;
+    border-radius: 10px !important;
+    font-weight: 700 !important;
+    padding: 10px 0 !important;
+}
+
+.deleteButton:hover {
+    background: #842727 !important;
+}
+
+.userCard__edit {
+    margin-top: 25px;
+    border-top: 1px solid #e6e6e6;
+    padding-top: 20px;
+}
+
+.saveButton {
+    margin-top: 18px !important;
+    width: 100%;
+    background: #4b6f44 !important;
+    border-radius: 10px !important;
+    font-weight: 700 !important;
+    padding: 12px 0 !important;
+}
+
+.saveButton:hover {
+    background: #3d5d37 !important;
+}
